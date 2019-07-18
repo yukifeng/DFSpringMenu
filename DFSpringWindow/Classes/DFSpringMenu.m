@@ -79,21 +79,20 @@ static NSTimeInterval kdelayAnimationDurning = 0.0f;
             _helperCenterView.backgroundColor = [UIColor redColor];
             _helperSliderView = [[UIView alloc]initWithFrame:CGRectMake(0, keyWindow.frame.size.height, DFHelperViewWidthHeight, DFHelperViewWidthHeight)];
             _helperSliderView.backgroundColor = [UIColor yellowColor];
-//            _helperCenterView.hidden = YES;
-//            _helperSliderView.hidden = YES;
+            _helperCenterView.hidden = YES;
+            _helperSliderView.hidden = YES;
             [keyWindow addSubview:_helperSliderView];
             [keyWindow addSubview:_helperCenterView];
             self.frame = CGRectMake(0, keyWindow.frame.size.height + DFDisplayMargin, DFScreenWidth, self.menuHeight + DFDisplayMargin);
             self.backgroundColor = [UIColor clearColor];
             [keyWindow insertSubview:self belowSubview:_helperSliderView];
-            [self addButtons:_buttons];
             break;
         case DFDisPlayDirectionLeftToRight:
 #warning TODO:
             break;
             
     }
-    NSLog(@"11111111111");
+    [self addButtons:_buttons];
 }
 
 - (void)addButtons:(NSArray *)buttons{
