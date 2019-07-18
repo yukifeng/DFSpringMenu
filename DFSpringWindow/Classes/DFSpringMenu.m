@@ -38,14 +38,6 @@ static NSTimeInterval kdelayAnimationDurning = 0.0f;
 }
 
 #pragma mark - 初始化
-- (instancetype)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-    }
-    return self;
-}
-
 - (instancetype)initWithDirection:(DFDisPlayDirection)direction widthHeight:(CGFloat)widthHeight backgroundColor:(UIColor*)menuBackgroundColor buttons:(nonnull NSArray<__kindof UIButton *> *)buttons
 {
     self = [super init];
@@ -59,7 +51,6 @@ static NSTimeInterval kdelayAnimationDurning = 0.0f;
                 self.menuHeight = widthHeight;
                 break;
             case DFDisPlayDirectionLeftToRight:
-#warning TODO:
                 self.menuWidth = widthHeight;
                 break;
         }
@@ -79,8 +70,8 @@ static NSTimeInterval kdelayAnimationDurning = 0.0f;
             _helperCenterView.backgroundColor = [UIColor redColor];
             _helperSliderView = [[UIView alloc]initWithFrame:CGRectMake(0, keyWindow.frame.size.height, DFHelperViewWidthHeight, DFHelperViewWidthHeight)];
             _helperSliderView.backgroundColor = [UIColor yellowColor];
-            _helperCenterView.hidden = YES;
-            _helperSliderView.hidden = YES;
+//            _helperCenterView.hidden = YES;
+//            _helperSliderView.hidden = YES;
             [keyWindow addSubview:_helperSliderView];
             [keyWindow addSubview:_helperCenterView];
             self.frame = CGRectMake(0, keyWindow.frame.size.height + DFDisplayMargin, DFScreenWidth, self.menuHeight + DFDisplayMargin);
@@ -88,9 +79,18 @@ static NSTimeInterval kdelayAnimationDurning = 0.0f;
             [keyWindow insertSubview:self belowSubview:_helperSliderView];
             break;
         case DFDisPlayDirectionLeftToRight:
-#warning TODO:
+            _helperCenterView = [[UIView alloc]initWithFrame:CGRectMake(-DFHelperViewWidthHeight , (keyWindow.frame.size.height - DFHelperViewWidthHeight) / 2, DFHelperViewWidthHeight, DFHelperViewWidthHeight)];
+            _helperCenterView.backgroundColor = [UIColor redColor];
+            _helperSliderView = [[UIView alloc]initWithFrame:CGRectMake(-DFHelperViewWidthHeight , 0, DFHelperViewWidthHeight, DFHelperViewWidthHeight)];
+            _helperSliderView.backgroundColor = [UIColor yellowColor];
+//            _helperCenterView.hidden = YES;
+//            _helperSliderView.hidden = YES;
+            [keyWindow addSubview:_helperSliderView];
+            [keyWindow addSubview:_helperCenterView];
+            self.frame = CGRectMake(-(self.menuWidth + DFDisplayMargin), 0, self.menuWidth + DFDisplayMargin, DFScreenHeight);
+            self.backgroundColor = [UIColor clearColor];
+            [keyWindow insertSubview:self belowSubview:_helperSliderView];
             break;
-            
     }
     [self addButtons:_buttons];
 }
@@ -107,6 +107,13 @@ static NSTimeInterval kdelayAnimationDurning = 0.0f;
             }
             break;
          case DFDisPlayDirectionLeftToRight:
+            for (int i = 0; i < buttons.count; i++) {
+                UIButton *button = buttons[i];
+                button.tag = i;
+                CGFloat height = DFScreenHeight / buttons.count;
+                button.frame = CGRectMake(0 ,0 + i * height, self.menuWidth, height);
+                [self addSubview:button];
+            }
             break;
     }
 }
@@ -123,6 +130,11 @@ static NSTimeInterval kdelayAnimationDurning = 0.0f;
             [path closePath];
             break;
         case DFDisPlayDirectionLeftToRight:
+            [path moveToPoint:CGPointMake(0, 0)];
+            [path addLineToPoint:CGPointMake(0, keyWindow.frame.size.height)];
+            [path addLineToPoint:CGPointMake(self.menuWidth, keyWindow.frame.size.height)];
+            [path addQuadCurveToPoint:CGPointMake(self.menuWidth, 0) controlPoint:CGPointMake(self.menuWidth + _helperViewDiff, keyWindow.frame.size.height / 2)];
+            [path closePath];
             break;
     }
     CGContextAddPath(context, path.CGPath);
@@ -142,6 +154,13 @@ static NSTimeInterval kdelayAnimationDurning = 0.0f;
             }
             break;
         case DFDisPlayDirectionLeftToRight:
+            for (int i = 0 ; i<_buttons.count; i++) {
+                UIButton *button = _buttons[i];
+                button.transform = CGAffineTransformMakeTranslation(-self.menuWidth, 0);
+                [UIView animateWithDuration:khelperViewAnimationDurning delay:i*(0.3/_buttons.count) usingSpringWithDamping:0.6f initialSpringVelocity:0.0f options:UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowUserInteraction animations:^{
+                    button.transform = CGAffineTransformIdentity;
+                } completion:^(BOOL finished) {}];
+            }
             break;
     }
 }
@@ -155,6 +174,7 @@ static NSTimeInterval kdelayAnimationDurning = 0.0f;
                     self.frame = CGRectMake(0, self->keyWindow.frame.size.height - DFDisplayMargin - self.menuHeight, DFScreenWidth, self.menuHeight + DFDisplayMargin);
                     break;
                 case DFDisPlayDirectionLeftToRight:
+                    self.frame = self.bounds;
                     break;
             }
         }];
@@ -165,6 +185,7 @@ static NSTimeInterval kdelayAnimationDurning = 0.0f;
                     self->_helperCenterView.frame = CGRectMake((self->keyWindow.frame.size.width - DFHelperViewWidthHeight) / 2, self->keyWindow.frame.size.height - self.menuHeight, DFHelperViewWidthHeight, DFHelperViewWidthHeight);
                     break;
                 case DFDisPlayDirectionLeftToRight:
+                    self->_helperCenterView.frame = CGRectMake(self.menuWidth - DFHelperViewWidthHeight / 2, self->keyWindow.frame.size.height / 2, DFHelperViewWidthHeight, DFHelperViewWidthHeight);
                     break;
             }
         } completion:^(BOOL finished) {
@@ -180,6 +201,7 @@ static NSTimeInterval kdelayAnimationDurning = 0.0f;
                     self->_helperSliderView.frame = CGRectMake(0, self->keyWindow.frame.size.height - self.menuHeight, DFHelperViewWidthHeight, DFHelperViewWidthHeight);
                     break;
                 case DFDisPlayDirectionLeftToRight:
+                    self->_helperSliderView.frame = CGRectMake(self.menuWidth - DFHelperViewWidthHeight / 2, 0, DFHelperViewWidthHeight, DFHelperViewWidthHeight);
                     break;
             }
         } completion:^(BOOL finished) {
@@ -198,11 +220,25 @@ static NSTimeInterval kdelayAnimationDurning = 0.0f;
 
 - (void)popMenu{
     [UIView animateWithDuration:kmengbanAnimationDurning animations:^{
-        self.frame = CGRectMake(0, self->keyWindow.frame.size.height + DFDisplayMargin, DFScreenWidth, self.menuHeight + DFDisplayMargin);
+        switch (self.displayDirection) {
+            case DFDisPlayDirectionDownToUp:
+                self.frame = CGRectMake(0, self->keyWindow.frame.size.height + DFDisplayMargin, DFScreenWidth, self.menuHeight + DFDisplayMargin);
+                break;
+            case DFDisPlayDirectionLeftToRight:
+                self.frame = CGRectMake(-(self.menuWidth + DFDisplayMargin), 0, self.menuWidth + DFDisplayMargin, DFScreenHeight);
+                break;
+        }
     }];
     [self beforeAnimation];
     [UIView animateWithDuration:khelperViewAnimationDurning delay:kdelayAnimationDurning usingSpringWithDamping:0.5f initialSpringVelocity:0.9f options:UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowUserInteraction animations:^{
-        self->_helperCenterView.frame = CGRectMake((self->keyWindow.frame.size.width - DFHelperViewWidthHeight) / 2, self->keyWindow.frame.size.height, DFHelperViewWidthHeight, DFHelperViewWidthHeight);
+        switch (self.displayDirection) {
+            case DFDisPlayDirectionDownToUp:
+                self->_helperCenterView.frame = CGRectMake((self->keyWindow.frame.size.width - DFHelperViewWidthHeight) / 2, self->keyWindow.frame.size.height, DFHelperViewWidthHeight, DFHelperViewWidthHeight);
+                break;
+            case DFDisPlayDirectionLeftToRight:
+                self->_helperCenterView.frame = CGRectMake(-DFHelperViewWidthHeight , (self->keyWindow.frame.size.height - DFHelperViewWidthHeight) / 2, DFHelperViewWidthHeight, DFHelperViewWidthHeight);
+                break;
+        }
     } completion:^(BOOL finished) {
         [self finishAnimation];
     }];
@@ -211,7 +247,14 @@ static NSTimeInterval kdelayAnimationDurning = 0.0f;
     }];
     [self beforeAnimation];
     [UIView animateWithDuration:khelperViewAnimationDurning delay:kdelayAnimationDurning usingSpringWithDamping:0.8f initialSpringVelocity:2.0f options:UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowUserInteraction animations:^{
-        self->_helperSliderView.frame = CGRectMake(0, self->keyWindow.frame.size.height, DFHelperViewWidthHeight, DFHelperViewWidthHeight);
+        switch (self.displayDirection) {
+            case DFDisPlayDirectionDownToUp:
+                self->_helperSliderView.frame = CGRectMake(0, self->keyWindow.frame.size.height, DFHelperViewWidthHeight, DFHelperViewWidthHeight);
+                break;
+            case DFDisPlayDirectionLeftToRight:
+                self->_helperSliderView.frame = CGRectMake(-DFHelperViewWidthHeight , 0, DFHelperViewWidthHeight, DFHelperViewWidthHeight);
+                break;
+        }
     } completion:^(BOOL finished) {
         [self finishAnimation];
     }];
