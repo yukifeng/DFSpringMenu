@@ -15,14 +15,17 @@ typedef NS_ENUM(NSInteger, DFDisPlayDirection) {
     DFDisPlayDirectionLeftToRight,
 };
 
+typedef void(^DFMenuButtonBlock)(NSInteger index);
+
 @interface DFSpringMenu : UIView
 
 /**
  弹出的方向
  */
 @property(nonatomic,assign) DFDisPlayDirection displayDirection;
+@property(nonatomic,copy) DFMenuButtonBlock buttonBlock;
 
-- (instancetype)initWithDirection:(DFDisPlayDirection)direction widthHeight:(CGFloat)widthHeight backgroundColor:(UIColor*)menuBackgroundColor;
+- (instancetype)initWithDirection:(DFDisPlayDirection)direction widthHeight:(CGFloat)widthHeight backgroundColor:(UIColor*)menuBackgroundColor buttonImages:(NSArray *)buttonImages;
 /**
  弹出菜单
  */

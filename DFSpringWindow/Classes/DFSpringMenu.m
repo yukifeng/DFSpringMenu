@@ -34,6 +34,7 @@ static NSTimeInterval kdelayAnimationDurning = 0.0f;
     UIWindow *keyWindow;
     CGFloat _helperViewDiff;
     BOOL _isDisplay;
+    NSArray *_buttonImages;
 }
 
 #pragma mark - 初始化
@@ -46,13 +47,14 @@ static NSTimeInterval kdelayAnimationDurning = 0.0f;
     return self;
 }
 
-- (instancetype)initWithDirection:(DFDisPlayDirection)direction widthHeight:(CGFloat)widthHeight backgroundColor:(UIColor*)menuBackgroundColor
+- (instancetype)initWithDirection:(DFDisPlayDirection)direction widthHeight:(CGFloat)widthHeight backgroundColor:(UIColor*)menuBackgroundColor buttonImages:(nonnull NSArray *)buttonImages
 {
     self = [super init];
     if (self) {
         _viewBackgroundColor = menuBackgroundColor;
         self.displayDirection = direction;
         _isDisplay = NO;
+        _buttonImages = [NSArray arrayWithArray:buttonImages];
         switch (self.displayDirection) {
             case DFDisPlayDirectionDownToUp:
                 self.menuHeight = widthHeight;
@@ -89,6 +91,25 @@ static NSTimeInterval kdelayAnimationDurning = 0.0f;
 #warning TODO:
             break;
     }
+    [self addButtons:_buttonImages];
+}
+
+- (void)addButtons:(NSArray *)images{
+    switch (self.displayDirection) {
+        case DFDisPlayDirectionDownToUp:
+            for (int i = 0; i < images.count; i++) {
+                UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+                [button setImage:images[i] forState:UIControlStateNormal];
+                button.tag = i;
+                CGFloat width = DFScreenWidth / images.count;
+                button.frame = CGRectMake(0 + i * width, 0, width, self.menuHeight);
+                [button addTarget:self action:@selector(buttonClick:) forControlEvents:UIControlEventTouchUpInside];
+                [self addSubview:button];
+            }
+            break;
+         case DFDisPlayDirectionLeftToRight:
+            break;
+    }
 }
 
 - (void)drawRect:(CGRect)rect{
@@ -108,6 +129,22 @@ static NSTimeInterval kdelayAnimationDurning = 0.0f;
     CGContextAddPath(context, path.CGPath);
     [_viewBackgroundColor set];
     CGContextFillPath(context);
+}
+
+- (void)animationButton{
+    switch (self.displayDirection) {
+        case DFDisPlayDirectionDownToUp:
+            for (int i = 0 ; i<_buttonImages.count; i++) {
+                UIButton *button = _buttonImages[i];
+                button.transform = CGAffineTransformMakeTranslation(0, self.menuHeight);
+                [UIView animateWithDuration:khelperViewAnimationDurning delay:i*(0.3/_buttonImages.count) usingSpringWithDamping:0.6f initialSpringVelocity:0.0f options:UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowUserInteraction animations:^{
+                    button.transform = CGAffineTransformIdentity;
+                } completion:^(BOOL finished) {}];
+            }
+            break;
+        case DFDisPlayDirectionLeftToRight:
+            break;
+    }
 }
 
 - (void)pushMenu{
@@ -179,6 +216,12 @@ static NSTimeInterval kdelayAnimationDurning = 0.0f;
         [self finishAnimation];
     }];
     _isDisplay = NO;
+}
+
+- (void)buttonClick:(UIButton *)button{
+    if (self.buttonBlock) {
+        self.buttonBlock(button.tag);
+    }
 }
 
 - (void)tapClick:(UITapGestureRecognizer *)gesture{

@@ -20,7 +20,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    m = [[DFSpringMenu alloc]initWithDirection:DFDisPlayDirectionDownToUp widthHeight:200 backgroundColor:[UIColor whiteColor]];
+    m = [[DFSpringMenu alloc]initWithDirection:DFDisPlayDirectionDownToUp widthHeight:200 backgroundColor:[UIColor whiteColor] buttonImages:nil];
+    m.buttonBlock = ^(NSInteger index) {
+        NSLog(@"%zd",index);
+    };
 }
 
 
