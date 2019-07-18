@@ -25,11 +25,15 @@ typedef void(^DFMenuButtonBlock)(NSInteger index);
 @property(nonatomic,assign) DFDisPlayDirection displayDirection;
 @property(nonatomic,copy) DFMenuButtonBlock buttonBlock;
 
-- (instancetype)initWithDirection:(DFDisPlayDirection)direction widthHeight:(CGFloat)widthHeight backgroundColor:(UIColor*)menuBackgroundColor buttonImages:(NSArray *)buttonImages;
+- (instancetype)initWithDirection:(DFDisPlayDirection)direction widthHeight:(CGFloat)widthHeight backgroundColor:(UIColor*)menuBackgroundColor buttonImages:(NSArray<__kindof UIButton *> *)buttons;
 /**
  弹出菜单
  */
 - (void)pushMenu;
+/**
+ 收起菜单
+ */
+- (void)popMenu;
 
 @end
 
