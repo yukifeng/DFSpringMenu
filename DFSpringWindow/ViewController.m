@@ -20,10 +20,21 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    m = [[DFSpringMenu alloc]initWithDirection:DFDisPlayDirectionDownToUp widthHeight:200 backgroundColor:[UIColor whiteColor] buttonImages:nil];
-    m.buttonBlock = ^(NSInteger index) {
-        NSLog(@"%zd",index);
-    };
+    NSMutableArray *am = [NSMutableArray array];
+    for (int i = 0; i < 4; i++) {
+        UIButton *b = [UIButton buttonWithType:UIButtonTypeCustom];
+        b.tag = i;
+        [b setTitle:[NSString stringWithFormat:@"哈哈%d",i] forState:UIControlStateNormal];
+        [b setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+        [b addTarget:self action:@selector(bClick:) forControlEvents:UIControlEventTouchUpInside];
+        [am addObject:b];
+    }
+    m = [[DFSpringMenu alloc]initWithDirection:DFDisPlayDirectionDownToUp widthHeight:200 backgroundColor:[UIColor whiteColor] buttons:[am copy]];
+}
+
+- (void)bClick:(UIButton *)sender{
+    NSLog(@"%@",sender.titleLabel.text);
+    [m popMenu];
 }
 
 

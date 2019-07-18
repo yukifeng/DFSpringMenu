@@ -23,9 +23,9 @@ typedef void(^DFMenuButtonBlock)(NSInteger index);
  弹出的方向
  */
 @property(nonatomic,assign) DFDisPlayDirection displayDirection;
-@property(nonatomic,copy) DFMenuButtonBlock buttonBlock;
+//@property(nonatomic,copy) DFMenuButtonBlock buttonBlock;
 
-- (instancetype)initWithDirection:(DFDisPlayDirection)direction widthHeight:(CGFloat)widthHeight backgroundColor:(UIColor*)menuBackgroundColor buttonImages:(NSArray<__kindof UIButton *> *)buttons;
+- (instancetype)initWithDirection:(DFDisPlayDirection)direction widthHeight:(CGFloat)widthHeight backgroundColor:(UIColor*)menuBackgroundColor buttons:(NSArray<__kindof UIButton *> *)buttons;
 /**
  弹出菜单
  */

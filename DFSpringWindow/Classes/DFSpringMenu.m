@@ -42,12 +42,11 @@ static NSTimeInterval kdelayAnimationDurning = 0.0f;
 {
     self = [super initWithFrame:frame];
     if (self) {
-        [self prepareUI];
     }
     return self;
 }
 
-- (instancetype)initWithDirection:(DFDisPlayDirection)direction widthHeight:(CGFloat)widthHeight backgroundColor:(UIColor*)menuBackgroundColor buttonImages:(nonnull NSArray<__kindof UIButton *> *)buttons
+- (instancetype)initWithDirection:(DFDisPlayDirection)direction widthHeight:(CGFloat)widthHeight backgroundColor:(UIColor*)menuBackgroundColor buttons:(nonnull NSArray<__kindof UIButton *> *)buttons
 {
     self = [super init];
     if (self) {
@@ -64,6 +63,7 @@ static NSTimeInterval kdelayAnimationDurning = 0.0f;
                 self.menuWidth = widthHeight;
                 break;
         }
+        [self prepareUI];
     }
     return self;
 }
@@ -86,12 +86,14 @@ static NSTimeInterval kdelayAnimationDurning = 0.0f;
             self.frame = CGRectMake(0, keyWindow.frame.size.height + DFDisplayMargin, DFScreenWidth, self.menuHeight + DFDisplayMargin);
             self.backgroundColor = [UIColor clearColor];
             [keyWindow insertSubview:self belowSubview:_helperSliderView];
+            [self addButtons:_buttons];
             break;
         case DFDisPlayDirectionLeftToRight:
 #warning TODO:
             break;
+            
     }
-    [self addButtons:_buttons];
+    NSLog(@"11111111111");
 }
 
 - (void)addButtons:(NSArray *)buttons{
@@ -184,6 +186,7 @@ static NSTimeInterval kdelayAnimationDurning = 0.0f;
         } completion:^(BOOL finished) {
             [self finishAnimation];
         }];
+        [self animationButton];
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapClick:)];
         [_mengbanView addGestureRecognizer:tap];
         UITapGestureRecognizer *menuTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(menuTapClick:)];
@@ -216,11 +219,11 @@ static NSTimeInterval kdelayAnimationDurning = 0.0f;
     _isDisplay = NO;
 }
 
-- (void)buttonClick:(UIButton *)button{
-    if (self.buttonBlock) {
-        self.buttonBlock(button.tag);
-    }
-}
+//- (void)buttonClick:(UIButton *)button{
+//    if (self.buttonBlock) {
+//        self.buttonBlock(button.tag);
+//    }
+//}
 
 - (void)tapClick:(UITapGestureRecognizer *)gesture{
     [self popMenu];
@@ -229,11 +232,10 @@ static NSTimeInterval kdelayAnimationDurning = 0.0f;
 - (void)menuTapClick:(UITapGestureRecognizer *)gesture{
     UIGestureRecognizerState state = gesture.state;
     CGPoint point = [gesture locationInView:gesture.view];
-    if (state == UIGestureRecognizerStateCancelled || state == UIGestureRecognizerStateFailed) {
-    }else{
-        if (point.y <= DFDisplayMargin && self.displayDirection == DFDisPlayDirectionDownToUp) {
-            [self popMenu];
-        }
+    if (point.y <= DFDisplayMargin && self.displayDirection == DFDisPlayDirectionDownToUp) {
+        [self popMenu];
+    }else if (self.displayDirection == DFDisPlayDirectionLeftToRight && point.x > self.menuWidth){
+        [self popMenu];
     }
 }
 
