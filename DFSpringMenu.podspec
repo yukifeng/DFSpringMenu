@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = "DFSpringMenu"
-  spec.version      = "1.0.0"
+  spec.version      = "1.0.1"
   spec.summary      = "自用弹簧菜单"
   spec.description  = <<-DESC
 自用弹簧菜单自用弹簧菜单自用弹簧菜单自用弹簧菜单自用弹簧菜单自用弹簧菜单自用弹簧菜单自用弹簧菜单自用弹簧菜单自用弹簧菜单
@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
   spec.source       = { :git => "https://github.com/yukifeng/DFSpringMenu.git", :tag => "#{spec.version}" }
 
   spec.source_files  = "Classes/*.{h,m}"
-#spec.exclude_files = "Classes/Exclude"
+  spec.exclude_files = "demo/"
 
   # spec.public_header_files = "Classes/**/*.h"
 
