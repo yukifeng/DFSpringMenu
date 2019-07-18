@@ -30,7 +30,7 @@
         [am addObject:b];
     }
 //    m = [[DFSpringMenu alloc]initWithDirection:DFDisPlayDirectionDownToUp widthHeight:200 backgroundColor:[UIColor whiteColor] buttons:[am copy]];
-    m = [[DFSpringMenu alloc]initWithDirection:DFDisPlayDirectionLeftToRight widthHeight:200 backgroundColor:[UIColor whiteColor] buttons:[am copy]];
+    m = [[DFSpringMenu alloc]initWithDirection:DFDisPlayDirectionLeftToRight widthHeight:300 backgroundColor:[UIColor whiteColor] buttons:[am copy]];
 }
 
 - (void)bClick:(UIButton *)sender{

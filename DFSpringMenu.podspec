@@ -15,8 +15,8 @@ Pod::Spec.new do |spec|
 
   spec.source       = { :git => "https://github.com/yukifeng/DFSpringMenu.git", :tag => "#{spec.version}" }
 
-  spec.source_files  = "DFSpringWindow/Classes/*.{h,m}"
-  spec.exclude_files = "Classes/Exclude"
+  spec.source_files  = "Classes/*.{h,m}"
+#spec.exclude_files = "Classes/Exclude"
 
   # spec.public_header_files = "Classes/**/*.h"
 
